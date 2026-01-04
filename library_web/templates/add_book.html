@@ -90,7 +90,7 @@
         const isbnPattern = /^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$/;
         
         if (isbn && !isbnPattern.test(isbn)) {
-            e.target.setCustomValidity('Please enter a valid ISBN format (e.g., 978-0123456789)');
+            e.target.setCustomValidity('Please enter a valid ISBN format (e.g., XXX-X-XXXX-XXXX-X)');
         } else {
             e.target.setCustomValidity('');
         }
