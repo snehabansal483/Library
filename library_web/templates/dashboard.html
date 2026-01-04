@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-header text-center">
+    <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+    <p class="mb-0">Welcome to the Library Management System</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-3x mb-3"></i>
+                <h3>{{ stats.total_books }}</h3>
+                <p class="mb-0">Total Books</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card-success">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x mb-3"></i>
+                <h3>{{ stats.total_members }}</h3>
+                <p class="mb-0">Total Members</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card-info">
+            <div class="card-body text-center">
+                <i class="fas fa-check-circle fa-3x mb-3"></i>
+                <h3>{{ stats.available_books }}</h3>
+                <p class="mb-0">Available Books</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card-warning">
+            <div class="card-body text-center">
+                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                <h3>{{ stats.overdue_books }}</h3>
+                <p class="mb-0">Overdue Books</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-rocket"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('add_book_route') }}" class="btn btn-primary w-100">
+                            <i class="fas fa-plus"></i> Add Book
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('add_member_route') }}" class="btn btn-success w-100">
+                            <i class="fas fa-user-plus"></i> Add Member
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('borrow') }}" class="btn btn-info w-100">
+                            <i class="fas fa-handshake"></i> Borrow Book
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ url_for('overdue') }}" class="btn btn-warning w-100">
+                            <i class="fas fa-clock"></i> View Overdue
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity and Overdue Books -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-history"></i> Recent Borrowings</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_borrowings %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Member</th>
+                                    <th>Borrow Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for borrowing in recent_borrowings %}
+                                <tr>
+                                    <td>{{ borrowing.title }}</td>
+                                    <td>{{ borrowing.member_name }}</td>
+                                    <td>{{ borrowing.borrow_date }}</td>
+                                    <td>{{ borrowing.due_date }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if borrowing.status == 'Returned' else 'primary' }}">
+                                            {{ borrowing.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <a href="{{ url_for('borrowings') }}" class="btn btn-outline-primary">View All Borrowings</a>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No recent borrowings found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-exclamation-triangle text-warning"></i> Overdue Books</h5>
+            </div>
+            <div class="card-body">
+                {% if overdue_books %}
+                    {% for book in overdue_books[:5] %}
+                        <div class="alert alert-warning py-2 mb-2">
+                            <strong>{{ book.title }}</strong><br>
+                            <small>{{ book.member_name }} - Due: {{ book.due_date }}</small>
+                        </div>
+                    {% endfor %}
+                    {% if overdue_books|length > 5 %}
+                        <p class="text-muted">And {{ overdue_books|length - 5 }} more...</p>
+                    {% endif %}
+                    <div class="text-center">
+                        <a href="{{ url_for('overdue') }}" class="btn btn-outline-warning btn-sm">View All Overdue</a>
+                    </div>
+                {% else %}
+                    <p class="text-success"><i class="fas fa-check"></i> No overdue books!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

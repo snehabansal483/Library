@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1><i class="fas fa-book"></i> {{ book.title }}</h1>
+        <div>
+            <a href="{{ url_for('update_book_route', book_id=book.id) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="{{ url_for('books') }}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> Back to Books
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Book Details</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Title:</dt>
+                    <dd class="col-sm-9">{{ book.title }}</dd>
+                    
+                    <dt class="col-sm-3">Author:</dt>
+                    <dd class="col-sm-9">{{ book.author }}</dd>
+                    
+                    <dt class="col-sm-3">Publication Year:</dt>
+                    <dd class="col-sm-9">{{ book.year }}</dd>
+                    
+                    <dt class="col-sm-3">ISBN:</dt>
+                    <dd class="col-sm-9"><code>{{ book.isbn or 'Not provided' }}</code></dd>
+                    
+                    <dt class="col-sm-3">Category:</dt>
+                    <dd class="col-sm-9">
+                        {% if book.category %}
+                            <span class="badge bg-info">{{ book.category }}</span>
+                        {% else %}
+                            <span class="text-muted">Not categorized</span>
+                        {% endif %}
+                    </dd>
+                    
+                    <dt class="col-sm-3">Description:</dt>
+                    <dd class="col-sm-9">{{ book.description or 'No description available' }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-cog"></i> Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('update_book_route', book_id=book.id) }}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit Book
+                    </a>
+                    <a href="{{ url_for('borrow') }}" class="btn btn-primary">
+                        <i class="fas fa-handshake"></i> Borrow This Book
+                    </a>
+                    <a href="{{ url_for('delete_book_route', book_id=book.id) }}" 
+                       class="btn btn-danger" 
+                       onclick="return confirm('Are you sure you want to delete this book?')">
+                        <i class="fas fa-trash"></i> Delete Book
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

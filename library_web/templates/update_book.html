@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1><i class="fas fa-edit"></i> Update Book</h1>
+        <a href="{{ url_for('books') }}" class="btn btn-light">
+            <i class="fas fa-arrow-left"></i> Back to Books
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-book"></i> Edit Book Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="title" class="form-label">Title *</label>
+                            <input type="text" name="title" id="title" class="form-control" value="{{ book.title }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="author" class="form-label">Author *</label>
+                            <input type="text" name="author" id="author" class="form-control" value="{{ book.author }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="year" class="form-label">Publication Year *</label>
+                            <input type="number" name="year" id="year" class="form-control" min="1000" max="{{ current_year }}" value="{{ book.year }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="isbn" class="form-label">ISBN *</label>
+                            <input type="text" name="isbn" id="isbn" class="form-control" value="{{ book.isbn }}" placeholder="978-XXXXXXXXX" required>
+                            <div class="form-text">ISBN is required and must be unique</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <input type="text" name="category" id="category" class="form-control" list="categories" value="{{ book.category }}" placeholder="e.g., Fiction, Science">
+                            <datalist id="categories">
+                                {% for category in categories %}
+                                    <option value="{{ category }}">
+                                {% endfor %}
+                                <option value="Fiction">
+                                <option value="Non-Fiction">
+                                <option value="Science">
+                                <option value="History">
+                                <option value="Biography">
+                                <option value="Technology">
+                                <option value="Literature">
+                                <option value="Education">
+                                <option value="Reference">
+                            </datalist>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" id="description" class="form-control" rows="4" placeholder="Brief description of the book...">{{ book.description }}</textarea>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('books') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Book
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Set current year as default max year
+    document.getElementById('year').max = new Date().getFullYear();
+</script>
+{% endblock %}

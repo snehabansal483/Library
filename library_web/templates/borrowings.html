@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1><i class="fas fa-exchange-alt"></i> Borrowings Management</h1>
+        <a href="{{ url_for('borrow') }}" class="btn btn-light">
+            <i class="fas fa-plus"></i> Borrow Book
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5><i class="fas fa-list"></i> All Borrowings ({{ borrowings|length }} total)</h5>
+    </div>
+    <div class="card-body">
+        {% if borrowings %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Book</th>
+                            <th>Member</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
+                            <th>Return Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for borrowing in borrowings %}
+                        <tr class="{% if borrowing.overdue_status == 'Overdue' %}table-warning{% endif %}">
+                            <td>
+                                <strong>{{ borrowing.title }}</strong>
+                                <br><small class="text-muted">by {{ borrowing.author }}</small>
+                            </td>
+                            <td>{{ borrowing.member_name }}</td>
+                            <td>{{ borrowing.borrow_date }}</td>
+                            <td>
+                                {{ borrowing.due_date }}
+                                {% if borrowing.overdue_status == 'Overdue' %}
+                                    <br><span class="badge bg-danger">OVERDUE</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if borrowing.returned_date %}
+                                    {{ borrowing.returned_date }}
+                                {% else %}
+                                    <span class="text-muted">Not returned</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if borrowing.status == 'Returned' else 'primary' }}">
+                                    {{ borrowing.status }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if borrowing.status == 'Active' %}
+                                    <a href="{{ url_for('return_book_route', book_id=borrowing.book_id, member_id=borrowing.member_id) }}" 
+                                       class="btn btn-success btn-sm" 
+                                       onclick="return confirm('Mark this book as returned?')">
+                                        <i class="fas fa-check"></i> Return
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Completed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-exchange-alt fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No borrowings found</h5>
+                <p>Start by borrowing your first book</p>
+                <a href="{{ url_for('borrow') }}" class="btn btn-primary">
+                    <i class="fas fa-handshake"></i> Borrow Book
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
